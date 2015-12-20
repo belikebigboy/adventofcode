@@ -1,15 +1,5 @@
 package com.bb.me;
 
-import java.util.ArrayList;
-
-interface Visitable {
-    void accept(Visitor visitor);
-}
-
-interface Visitor {
-    void visit(House house);
-}
-
 /**
  * --- Day 20: Infinite Elves and Infinite Houses ---
  * <p>
@@ -39,34 +29,72 @@ interface Visitor {
  * <p>
  * Your puzzle input is 36000000.
  */
+
+import java.util.ArrayList;
+
+interface Visitable {
+    void accept(Visitor visitor);
+}
+
+
+interface Visitor {
+    void visit(House house);
+}
+
 public class Day20 {
 
     public static void main(String[] args) {
 
         int noOfPresents = 36000000;
         int limit = 1000000;
+
+        //procedural
+        Long start = System.currentTimeMillis();
+        int i = 0;
+        while (true) {
+            int sum = 0;
+            i++;
+
+            for (int j = i; j > 0; j--)
+                if (i % j == 0)
+                    sum += j * 10;
+
+            if (sum >= 36000000) {
+                System.out.println(String.format("Found house %d with %d visits", i, sum));
+                break;
+            }
+        }
+        Long end = System.currentTimeMillis();
+
+        System.out.println("Algorithmic took " + (end - start) / 1000 + " seconds to complete");
+
+        //fancy, object oriented with Visitor Pattern
+
+        start = System.currentTimeMillis();
         VisitableStreet street = new VisitableStreet(new ArrayList<>());
         boolean found = false;
 
 
-        for (int i = 1; i <= limit; i++) {
+        for (i = 1; i <= limit; i++) {
             House house = new House(i);
             street.addHouse(house);
         }
 
 
-        ArrayList<House> housesByNo = null;
+        ArrayList<House> housesByNo = new ArrayList<>();
 
         int elfNumber = 1;
         while (!found && elfNumber <= limit) {
             street.visitHouseByElfNumber(elfNumber);
             housesByNo = street.getHouseNoByVisits(noOfPresents);
             found = (housesByNo.size() > 0);
-            ;
             elfNumber++;
         }
 
-        System.out.println("House " + housesByNo + " has received " + noOfPresents + " presents");
+        end = System.currentTimeMillis();
+        System.out.println("Object oriented took " + (end - start) / 1000 + " seconds to complete");
+        System.out.println(String.format("Found house %d with %d presents", housesByNo.get(0).getNumber(), housesByNo.get(0).getNoOfPresents()));
+
     }
 }
 
@@ -137,7 +165,6 @@ class Elf implements Visitor {
         int noOfPresents = house.getNoOfPresents();
         noOfPresents += number * 10;
         house.setNoOfPresents(noOfPresents);
-        System.out.println("Elf " + number + " is visiting house " + house.getNumber() + " which now has " + noOfPresents + " presents");
     }
 
     public int getNumber() {
