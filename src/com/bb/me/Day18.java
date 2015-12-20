@@ -1,6 +1,7 @@
 package com.bb.me;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * After the million lights incident, the fire code has gotten stricter: now, at most ten thousand lights are allowed. You arrange them in a 100x100 grid.
@@ -95,7 +96,7 @@ public class Day18 {
     private static int countNeighbours(char[][] map, int x, int y, char type) {
         int count = 0;
         if (x > 0 && x < map.length - 1) {
-            if (y > 0 && y > map.length - 1) {
+            if (y > 0 && y < map.length - 1) {
                 count += match(map, x - 1, y - 1, type);
                 count += match(map, x - 1, y, type);
                 count += match(map, x - 1, y + 1, type);
@@ -121,7 +122,7 @@ public class Day18 {
             }
         } else {
             if (x == 0) { //left but not corner
-                if (y > 0 && y > map.length - 1) {
+                if (y > 0 && y < map.length - 1) {
                     count += match(map, x, y - 1, type);
                     count += match(map, x + 1, y - 1, type);
                     count += match(map, x, y + 1, type);
@@ -139,7 +140,7 @@ public class Day18 {
                     }
                 }
             } else if (x == map.length - 1) {
-                if (y > 0 && y > map.length - 1) {//right
+                if (y > 0 && y < map.length - 1) {//right
                     count += match(map, x - 1, y - 1, type);
                     count += match(map, x - 1, y, type);
                     count += match(map, x - 1, y + 1, type);
@@ -170,11 +171,12 @@ public class Day18 {
     }
 
     private static char[][] processMap(char[][] map) {
-        char[][] resultMap = new char[100][100];
+        char[][] resultMap = new char[map.length][map.length];
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
                 if (isOn(map[i][j])) {
                     int count = countNeighbours(map, i, j, '#');
+                    //System.out.println("ON - "+ i + ", " + j + " has " + count + " neighbours ON" );
                     if (count == 2 || count == 3) {
                         resultMap[i][j] = '#';
                     } else {
@@ -182,6 +184,7 @@ public class Day18 {
                     }
                 } else {
                     int count = countNeighbours(map, i, j, '#');
+                    //System.out.println("OFF - "+ i + ", " + j + " has " + count + " neighbours ON" );
                     if (count == 3) {
                         resultMap[i][j] = '#';
                     } else {
@@ -190,27 +193,48 @@ public class Day18 {
                 }
             }
         }
+
         return resultMap;
+    }
+
+    private static int countLights(char[][] map) {
+        int count = 0;
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j] == '#') {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
     private static boolean isOn(char ch) {
         return ch == '#';
     }
 
-
     public static void main(String[] args) throws IOException {
         String fileMap = FileReader.getString("day18.txt");
 
+        /*fileMap = ".#.#.#\r\n" +
+                "...##.\r\n" +
+                "#....#\r\n" +
+                "..#...\r\n" +
+                "#.#..#\r\n" +
+                "####..";*/
+
         map = loadMap(fileMap);
 
-        int count = countNeighbours(map, 0, 99, '#');
-
-        System.out.println(count);
-
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20000; i++) {
             map = processMap(map);
         }
 
-        //System.out.println(Arrays.deepToString(map));
+        int count = countLights(map);
+
+        System.out.println(Arrays.deepToString(map));
+
+        System.out.println(count + " lights are on");
     }
 }
