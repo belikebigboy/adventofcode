@@ -12,4 +12,6 @@ public class FileReader {
     public static String getString(String filename) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filename)));
     }
+
+
 }
