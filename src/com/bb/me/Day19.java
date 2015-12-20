@@ -60,14 +60,13 @@ public class Day19 {
             String key = entry.getKey();
             ArrayList<String> values = entry.getValue();
             for (String newValue : values) {
-                int index = 0;
+                int index = moleculeMachine.indexOf(key);
                 while (index >= 0) {
                     String replaced = replaceAtIndex(moleculeMachine, key, newValue, index);
                     uniqueCalibrations.add(replaced);
-                    index += moleculeMachine.indexOf(key, index);
+                    index = moleculeMachine.indexOf(key, index + 1);
                 }
             }
-
         }
 
         return uniqueCalibrations.size();
@@ -75,17 +74,24 @@ public class Day19 {
     }
 
     public static String replaceAtIndex(String text, String old, String newT, int pos) {
+        if (pos > text.length() - 1) {
+            System.out.println("Invalid position. Higher than text length: " + pos);
+            return text;
+        }
+
+        if (!text.substring(pos, pos + old.length()).equals(old)) {
+            System.out.println("Invalid position for function. Not changing " + pos);
+            return text;
+        }
+
         return text.substring(0, pos) + newT + text.substring(pos + old.length());
     }
-
 
     public static void main(String[] args) throws IOException {
         String transforms = FileReader.getString("day19_1.txt");
 
         String molecule = FileReader.getString("day19_2.txt");
 
-
         System.out.println(noOfCalibrations(loadTransormations(transforms), molecule));
-
     }
 }
