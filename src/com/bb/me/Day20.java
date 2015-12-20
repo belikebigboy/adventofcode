@@ -47,7 +47,36 @@ public class Day20 {
 
         int noOfPresents = 36000000;
         int limit = 1000000;
+        //algorithmicSearch();
 
+        //fancy, object oriented with Visitor Pattern
+
+        Long start = System.currentTimeMillis();
+        VisitableStreet street = new VisitableStreet(new ArrayList<>());
+        boolean found = false;
+
+        for (int i = 1; i <= limit; i++) {
+            House house = new House(i);
+            street.addHouse(house);
+        }
+
+        ArrayList<House> housesByNo = new ArrayList<>();
+
+        int elfNumber = 1;
+        while (!found && elfNumber <= limit) {
+            street.visitHouseByElfNumber(elfNumber);
+            housesByNo = street.getHouseNoByVisits(noOfPresents);
+            found = (housesByNo.size() > 0);
+            elfNumber++;
+        }
+
+        Long end = System.currentTimeMillis();
+        System.out.println("Object oriented took " + (end - start) / 1000 + " seconds to complete");
+        System.out.println(String.format("Found house %d with %d presents", housesByNo.get(0).getNumber(), housesByNo.get(0).getNoOfPresents()));
+
+    }
+
+    private static void algorithmicSearch() {
         //procedural
         Long start = System.currentTimeMillis();
         int i = 0;
@@ -67,34 +96,6 @@ public class Day20 {
         Long end = System.currentTimeMillis();
 
         System.out.println("Algorithmic took " + (end - start) / 1000 + " seconds to complete");
-
-        //fancy, object oriented with Visitor Pattern
-
-        start = System.currentTimeMillis();
-        VisitableStreet street = new VisitableStreet(new ArrayList<>());
-        boolean found = false;
-
-
-        for (i = 1; i <= limit; i++) {
-            House house = new House(i);
-            street.addHouse(house);
-        }
-
-
-        ArrayList<House> housesByNo = new ArrayList<>();
-
-        int elfNumber = 1;
-        while (!found && elfNumber <= limit) {
-            street.visitHouseByElfNumber(elfNumber);
-            housesByNo = street.getHouseNoByVisits(noOfPresents);
-            found = (housesByNo.size() > 0);
-            elfNumber++;
-        }
-
-        end = System.currentTimeMillis();
-        System.out.println("Object oriented took " + (end - start) / 1000 + " seconds to complete");
-        System.out.println(String.format("Found house %d with %d presents", housesByNo.get(0).getNumber(), housesByNo.get(0).getNoOfPresents()));
-
     }
 }
 
@@ -196,7 +197,7 @@ class VisitableStreet {
     public ArrayList<House> getHouseNoByVisits(int noOfPresents) {
         ArrayList<House> housesByNoOfPresents = new ArrayList<>();
         for (House house : houses) {
-            if (house.getNoOfPresents() == noOfPresents) {
+            if (house.getNoOfPresents() >= noOfPresents) {
                 housesByNoOfPresents.add(house);
             }
         }
