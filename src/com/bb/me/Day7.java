@@ -1,5 +1,7 @@
 package com.bb.me;
 
+import java.io.IOException;
+
 /**
  * --- Day 7: Some Assembly Required ---
  * <p>
@@ -40,7 +42,15 @@ package com.bb.me;
  * In little Bobby's kit's instructions booklet (provided as your puzzle input), what signal is ultimately provided to wire a?
  */
 public class Day7 {
-    public static void main(String[] args) {
+
+    private static String[] loadFile(String fileMap) {
+        return fileMap.split("\r\n");
+    }
+
+    public static void main(String[] args) throws IOException {
+        String fileMap = FileReader.getString("day6.txt");
+
+        String[] lines = loadFile(fileMap);
 
     }
 }

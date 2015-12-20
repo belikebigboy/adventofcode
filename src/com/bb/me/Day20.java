@@ -47,7 +47,7 @@ public class Day20 {
 
         int noOfPresents = 36000000;
         int limit = 1000000;
-        //algorithmicSearch();
+        algorithmicSearch();
 
         //fancy, object oriented with Visitor Pattern
 
@@ -84,9 +84,9 @@ public class Day20 {
             int sum = 0;
             i++;
 
-            for (int j = i; j > 0; j--)
+            for (int j = i; j > 0 && j < 50; j--)
                 if (i % j == 0)
-                    sum += j * 10;
+                    sum += j * 11;
 
             if (sum >= 36000000) {
                 System.out.println(String.format("Found house %d with %d visits", i, sum));
