@@ -52,7 +52,7 @@ public class Day20 {
         //fancy, object oriented with Visitor Pattern
 
         Long start = System.currentTimeMillis();
-        VisitableStreet street = new VisitableStreet(new ArrayList<>());
+        VisitableStreet street = new VisitableStreet(new ArrayList<House>());
         boolean found = false;
 
         for (int i = 1; i <= limit; i++) {
