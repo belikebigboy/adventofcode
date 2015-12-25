@@ -18,8 +18,8 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Day4 {
 
-    public static boolean gotcha(String input) throws NoSuchAlgorithmException {
-        return startsWithZeroes(calculateMD5(input));
+    public static boolean gotcha(String input, boolean isPartTwo) throws NoSuchAlgorithmException {
+        return startsWithZeroes(calculateMD5(input), isPartTwo);
     }
 
 
@@ -34,7 +34,10 @@ public class Day4 {
         return hexaString;
     }
 
-    public static boolean startsWithZeroes(String hexaString) {
+    public static boolean startsWithZeroes(String hexaString, boolean isPartTwo) {
+        if (isPartTwo) {
+            return hexaString.startsWith("000000");
+        }
         return hexaString.startsWith("00000");
     }
 
@@ -43,10 +46,14 @@ public class Day4 {
 
         boolean gotcha = false;
         int i = 0;
+        long time = System.currentTimeMillis();
         while (!gotcha) {
             i++;
-            gotcha = gotcha(key + i);
+            gotcha = gotcha(key + i, true);
         }
+        time = System.currentTimeMillis() - time;
+
+        System.out.println("Processing took " + time + " miliseconds");
 
         System.out.println("Minimum int is " + i);
 

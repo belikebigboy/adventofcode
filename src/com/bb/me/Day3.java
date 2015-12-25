@@ -21,25 +21,34 @@ import java.util.Set;
  */
 public class Day3 {
 
-    private static int countVisitedHouses(String input) {
+    private static int countVisitedHouses(String input, boolean roboEnabled) {
         Point location = new Point();
+
+        Point roboLocation = location;
 
         Set<Point> visited = new HashSet<>();
         visited.add(location);
 
         for (int i = 0; i < input.length(); i++) {
-            location = location.next(input.charAt(i));
-            System.out.println(location.x + ", " + location.y);
-            visited.add(location);
+            if (roboEnabled && i % 2 == 0) {
+                roboLocation = roboLocation.next(input.charAt(i));
+                visited.add(roboLocation);
+            } else {
+                location = location.next(input.charAt(i));
+                visited.add(location);
+            }
         }
         return visited.size();
     }
+
 
     public static void main(String[] args) throws IOException {
 
         String input = FileReader.getString("day3.txt");
 
-        System.out.println("Santa visited " + countVisitedHouses(input) + " at least once");
+        System.out.println("Santa visited " + countVisitedHouses(input, false) + " at least once");
+
+        System.out.println("Santa and Robo Santa visited " + countVisitedHouses(input, true) + " at least once");
     }
 
     public static class Point {

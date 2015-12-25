@@ -32,7 +32,10 @@ public class Day5 {
         return fileMap.split("\r\n");
     }
 
-    private static boolean isNiceString(String string) {
+    private static boolean isNiceString(String string, boolean isPartTwo) {
+        if (isPartTwo) {
+            return containsDoubleExpression(string) && containsDoubleLetterWithOneBetween(string);
+        }
         return containsThreeVowels(string, vowelsList) && containsDoubleLetter(string) && !containsBadExpressions(string, badExp);
 
     }
@@ -63,6 +66,18 @@ public class Day5 {
         return false;
     }
 
+    private static boolean containsDoubleExpression(String input) {
+        Pattern pattern = Pattern.compile("(\\w{2,})(\\w*)\\1");
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
+    }
+
+    private static boolean containsDoubleLetterWithOneBetween(String input) {
+        Pattern pattern = Pattern.compile("(\\w)(\\w)\\1");
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
+    }
+
     public static void main(String[] args) throws IOException {
         String fileMap = FileReader.getString("day5.txt");
 
@@ -70,7 +85,7 @@ public class Day5 {
 
         int count = 0;
         for (String line : lines) {
-            if (isNiceString(line)) {
+            if (isNiceString(line, false)) {
                 count++;
             }
         }
