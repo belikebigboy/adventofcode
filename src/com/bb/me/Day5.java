@@ -90,6 +90,13 @@ public class Day5 {
             }
         }
 
+        count = 0;
+        for (String line : lines) {
+            if (isNiceString(line, true)) {
+                count++;
+            }
+        }
+
         System.out.println("There are " + count + " nice strings");
 
     }

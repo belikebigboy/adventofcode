@@ -20,8 +20,10 @@ import java.util.Stack;
 public class Day17 {
 
     static int count;
+    static int minNumber = Integer.MAX_VALUE;
     private static Stack<Integer> stack = new Stack<Integer>();
     private static int sumInStack = 0;
+    private static ArrayList<Integer> result = new ArrayList<>();
 
     private static String[] loadFile(String fileMap) {
         return fileMap.split("\r\n");
@@ -33,6 +35,10 @@ public class Day17 {
         }
         if (sumInStack == quantity) {
             System.out.println(stack);
+            if (minNumber > stack.size()) {
+                minNumber = stack.size();
+            }
+            result.add(stack.size());
             count++;
         }
         for (int currentIndex = startIndex; currentIndex < endIndex; currentIndex++) {
@@ -45,7 +51,17 @@ public class Day17 {
                 sumInStack -= stack.pop();
             }
         }
+    }
 
+    private static int countMinCombinations() {
+        int count = 0;
+        for (Integer res : result) {
+            if (res == minNumber) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
 
@@ -69,5 +85,7 @@ public class Day17 {
         int count = countCombinations(150, containers);
 
         System.out.println("There are " + count + " combinations");
+
+        System.out.println("There are " + countMinCombinations() + " min combinations with size " + minNumber);
     }
 }

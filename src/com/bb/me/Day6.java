@@ -26,14 +26,14 @@ public class Day6 {
     public static final String OFF = "off";
     public static final String ON = "on";
     private static final String TOGGLE = "toggle";
-    static int[][] grid = new int[1000][1000];
+
 
     private static String[] loadFile(String fileMap) {
         return fileMap.split("\r\n");
     }
 
     //TODO replace string parsing with regexp
-    private static void executeCommand(String line) {
+    private static void executeCommand(int[][] grid, String line, boolean isP2) {
         String[] words = line.split(" ");
         if (line.startsWith(TURN)) {
             String[] origin = words[2].split(",");
@@ -43,9 +43,17 @@ public class Day6 {
             int x2 = new Integer(dest[0]);
             int y2 = new Integer(dest[1]);
             if (line.contains(OFF)) {
-                turnOff(x1, y1, x2, y2);
+                if (isP2) {
+                    turnOffV2(grid, x1, y1, x2, y2);
+                } else {
+                    turnOff(grid, x1, y1, x2, y2);
+                }
             } else {
-                turnOn(x1, y1, x2, y2);
+                if (isP2) {
+                    turnOnV2(grid, x1, y1, x2, y2);
+                } else {
+                    turnOn(grid, x1, y1, x2, y2);
+                }
             }
         } else {
             String[] origin = words[1].split(",");
@@ -54,12 +62,16 @@ public class Day6 {
             int y1 = new Integer(origin[1]);
             int x2 = new Integer(dest[0]);
             int y2 = new Integer(dest[1]);
-            toggle(x1, y1, x2, y2);
+            if (isP2) {
+                toggleV2(grid, x1, y1, x2, y2);
+            } else {
+                toggle(grid, x1, y1, x2, y2);
+            }
         }
     }
 
 
-    private static void turnOn(int x1, int y1, int x2, int y2) {
+    private static void turnOn(int[][] grid, int x1, int y1, int x2, int y2) {
         for (int i = x1; i <= x2; i++) {
             for (int j = y1; j <= y2; j++) {
                 grid[i][j] = 1;
@@ -67,7 +79,7 @@ public class Day6 {
         }
     }
 
-    private static void turnOff(int x1, int y1, int x2, int y2) {
+    private static void turnOff(int[][] grid, int x1, int y1, int x2, int y2) {
         for (int i = x1; i <= x2; i++) {
             for (int j = y1; j <= y2; j++) {
                 grid[i][j] = 0;
@@ -75,10 +87,37 @@ public class Day6 {
         }
     }
 
-    private static void toggle(int x1, int y1, int x2, int y2) {
+    private static void toggle(int[][] grid, int x1, int y1, int x2, int y2) {
         for (int i = x1; i <= x2; i++) {
             for (int j = y1; j <= y2; j++) {
                 grid[i][j] = 1 - grid[i][j];
+            }
+        }
+    }
+
+    private static void turnOnV2(int[][] grid, int x1, int y1, int x2, int y2) {
+        for (int i = x1; i <= x2; i++) {
+            for (int j = y1; j <= y2; j++) {
+                grid[i][j] += 1;
+            }
+        }
+    }
+
+    private static void turnOffV2(int[][] grid, int x1, int y1, int x2, int y2) {
+        for (int i = x1; i <= x2; i++) {
+            for (int j = y1; j <= y2; j++) {
+                if (grid[i][j] > 0) {
+                    grid[i][j] -= 1;
+                }
+
+            }
+        }
+    }
+
+    private static void toggleV2(int[][] grid, int x1, int y1, int x2, int y2) {
+        for (int i = x1; i <= x2; i++) {
+            for (int j = y1; j <= y2; j++) {
+                grid[i][j] += 2;
             }
         }
     }
@@ -88,8 +127,8 @@ public class Day6 {
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
-                if (map[i][j] == 1) {
-                    count++;
+                if (map[i][j] > 0) {
+                    count += map[i][j];
                 }
             }
         }
@@ -103,12 +142,23 @@ public class Day6 {
 
         String[] lines = loadFile(fileMap);
 
+        int grid[][] = new int[1000][1000];
         for (String line : lines) {
-            executeCommand(line);
+            executeCommand(grid, line, false);
         }
+
 
         int count = countLights(grid);
 
         System.out.println("There are " + count + " lights on");
+
+        int gridP2[][] = new int[1000][1000];
+        for (String line : lines) {
+            executeCommand(gridP2, line, true);
+        }
+
+        count = countLights(gridP2);
+
+        System.out.println("There are " + count + " brightness");
     }
 }
