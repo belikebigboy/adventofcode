@@ -32,6 +32,25 @@ public class Day1 {
 
     public static int calculateFloor(String input) {
         return countChars(input, "(") - countChars(input, ")");
+    }
+
+    private static int calculateIndex(String input, int floor) {
+        int i = 0;
+        int currFloor = 0;
+        String[] chars = input.split("");
+        for (String ch : chars) {
+            if (ch.equals("(")) {
+                currFloor++;
+            } else {
+                currFloor--;
+            }
+            i++;
+            if (currFloor == floor) {
+                break;
+            }
+        }
+
+        return i;
 
     }
 
@@ -46,7 +65,11 @@ public class Day1 {
 
         String input = FileReader.getString("day1.txt");
 
+        //part 1
         System.out.println("Santa's floor is " + calculateFloor(input));
+
+        //part2
+        System.out.println("Index for first char at floor -1 is " + calculateIndex(input, -1));
     }
 
 }

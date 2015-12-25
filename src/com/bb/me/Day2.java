@@ -37,6 +37,26 @@ public class Day2 {
         return total;
     }
 
+    public static int calculateRibbon(String input) {
+
+        String[] inputLines = input.split("\r\n");
+
+        int[] values;
+        int total = 0;
+
+        for (String inputLine : inputLines) {
+            values = parseValues(inputLine);
+            int l = values[0];
+            int w = values[1];
+            int h = values[2];
+
+            total += calculateVolume(l, w, h) + minInteger(2 * (l + w), 2 * (l + h), 2 * (h + w));
+        }
+
+        return total;
+
+    }
+
     /**
      * Parses an entry of form l x w x h to an int array
      */
@@ -58,6 +78,9 @@ public class Day2 {
         return 2 * l * w + 2 * w * h + 2 * h * l;
     }
 
+    private static int calculateVolume(int l, int w, int h) {
+        return l * w * h;
+    }
     private static int minInteger(Integer... numbers) {
         return Collections.min(Arrays.asList(numbers));
     }
@@ -66,7 +89,10 @@ public class Day2 {
 
         String input = FileReader.getString("day2.txt");
 
+        //part 1
         System.out.println("Amount of paper needed is " + calculateResult(input) + " square feet");
 
+        //part 2
+        System.out.println("Amount of ribbon needed is " + calculateRibbon(input) + " feet");
     }
 }
